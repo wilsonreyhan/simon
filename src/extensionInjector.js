@@ -1,5 +1,9 @@
 "use strict";
 
+const extensionImages = {
+  parrot: chrome.runtime.getURL("images/parrot_128.png"),
+};
+
 function addScript(src) {
   const script = document.createElement("script");
   script.type = "text/javascript";

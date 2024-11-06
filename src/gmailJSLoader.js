@@ -10,14 +10,23 @@
 const GmailFactory = require("gmail-js");
 import $ from "jquery";
 
+// trusted types catch all for all non-jquery html (specficially, add_compose_button)
+if (window.trustedTypes && window.trustedTypes.createPolicy) {
+  window.trustedTypes.createPolicy("default", {
+    createHTML: (string) => string,
+    createScriptURL: (string) => string,
+    createScript: (string) => string,
+  });
+}
+
+/* // trusted types catch all for all jquery html
 const trustedHTMLpolicy = trustedTypes.createPolicy("default", {
   createHTML: (to_escape) => to_escape,
 });
 
 $.extend({
   htmlPrefilter: trustedHTMLpolicy.createHTML, // this is the actual function which jQuery needs
-});
+}); */
 
-// don't mess up too bad if we have several gmail.js-based
-// extensions loaded at the same time!
+// handling multiple gmailjs instances at the same time
 window._gmailjs = window._gmailjs || new GmailFactory.Gmail($);
