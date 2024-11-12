@@ -23,7 +23,8 @@
         "dist/extension.js.map",
         "dist/gmailJsLoader.js",
         "dist/gmailJsLoader.js.map",
-        "images/parrot_128.png"
+        "images/parrot_128.png",
+        "images/transparent_parrot.png"
       ],
       "matches": ["*://mail.google.com/*"]
     }

@@ -37,9 +37,13 @@ function startExtension(gmail) {
     gmail.observe.on("compose", (compose) => {
       console.log("New compose window is opened!", compose);
       console.log("Compose Ref", gmail.dom.compose());
+
+      const parrotUrl = document.getElementById("extension-url-container")
+        .dataset.parrotUrl;
+
       gmail.tools.add_compose_button(
         compose,
-        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+        `<img src="${parrotUrl}" style="width: 20px; height: 20px;" alt="Parrot Icon" />`,
         () => console.log("Custom Compose Button Clicked!"),
         ""
       );

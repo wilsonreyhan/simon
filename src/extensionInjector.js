@@ -1,8 +1,15 @@
 "use strict";
 
-const extensionImages = {
-  parrot: chrome.runtime.getURL("images/parrot_128.png"),
-};
+// Create a hidden element to store our extension URL
+const urlContainer = document.createElement("div");
+urlContainer.id = "extension-url-container";
+urlContainer.dataset.parrotUrl = chrome.runtime.getURL(
+  "images/transparent_parrot.png"
+);
+urlContainer.style.display = "none";
+(document.body || document.head || document.documentElement).appendChild(
+  urlContainer
+);
 
 function addScript(src) {
   const script = document.createElement("script");
