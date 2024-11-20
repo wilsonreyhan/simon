@@ -29,5 +29,9 @@
       "matches": ["*://mail.google.com/*"]
     }
   ],
+  "background": {
+    "service_worker": "dist/background.js",
+    "type": "module"
+  },
   "host_permissions": ["https://*/*"]
 }

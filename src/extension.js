@@ -10,21 +10,6 @@ const loaderId = setInterval(() => {
   startExtension(window._gmailjs);
 }, 100);
 
-import OpenAI from "openai";
-
-const openai = new OpenAI({
-  apiKey: "INPUT YOURS HERE",
-  dangerouslyAllowBrowser: true,
-});
-
-async function generateAIResponse() {
-  const chatCompletion = await openai.chat.completions.create({
-    messages: [{ role: "user", content: "Say this is a test" }],
-    model: "gpt-4o-mini",
-  });
-  return chatCompletion;
-}
-
 /* // parse HTML code to Text
 function htmlToText(htmlContent) {
   const parser = new DOMParser();
@@ -60,11 +45,30 @@ function startExtension(gmail) {
         compose,
         `<img src="${parrotUrl}" style="width: 20px; height: 20px;" alt="Parrot Icon" />`,
         async () => {
-          const response = await generateAIResponse();
-          console.log("Open AI Test: " + response.choices[0].message.content);
+          window.postMessage(
+            {
+              type: "FROM_WEBPAGE_TO_EXTENSION",
+              message: {
+                type: "GENERATE_AI_RESPONSE",
+                prompt: "Say this is a test.",
+              },
+            },
+            "*"
+          );
         },
         ""
       );
     });
   });
 }
+
+window.addEventListener("message", function (event) {
+  if (event.data.type == "FROM_EXTENSION_TO_WEBPAGE") {
+    const response = event.data.response;
+    if (response.success) {
+      console.log("AI Response: " + response.data.choices[0].message.content);
+    } else {
+      console.error("Error: ", response.error);
+    }
+  }
+});
