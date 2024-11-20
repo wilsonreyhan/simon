@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "gmail-js": "^1.1.15",
-    "jquery": "^4.0.0-beta"
+    "jquery": "^4.0.0-beta",
+    "openai": "^4.72.0"
   },
   "devDependencies": {
     "esbuild": "^0.24.0"

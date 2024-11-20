@@ -10,6 +10,21 @@ const loaderId = setInterval(() => {
   startExtension(window._gmailjs);
 }, 100);
 
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: "INPUT YOURS HERE",
+  dangerouslyAllowBrowser: true,
+});
+
+async function generateAIResponse() {
+  const chatCompletion = await openai.chat.completions.create({
+    messages: [{ role: "user", content: "Say this is a test" }],
+    model: "gpt-4o-mini",
+  });
+  return chatCompletion;
+}
+
 /* // parse HTML code to Text
 function htmlToText(htmlContent) {
   const parser = new DOMParser();
@@ -44,7 +59,10 @@ function startExtension(gmail) {
       gmail.tools.add_compose_button(
         compose,
         `<img src="${parrotUrl}" style="width: 20px; height: 20px;" alt="Parrot Icon" />`,
-        () => console.log("Custom Compose Button Clicked!"),
+        async () => {
+          const response = await generateAIResponse();
+          console.log("Open AI Test: " + response.choices[0].message.content);
+        },
         ""
       );
     });

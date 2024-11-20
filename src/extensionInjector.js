@@ -1,6 +1,6 @@
 "use strict";
 
-// Create a hidden element to store our extension URL
+// Create a hidden element to store our image URL
 const urlContainer = document.createElement("div");
 urlContainer.id = "extension-url-container";
 urlContainer.dataset.parrotUrl = chrome.runtime.getURL(

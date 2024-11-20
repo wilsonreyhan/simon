@@ -19,14 +19,5 @@ if (window.trustedTypes && window.trustedTypes.createPolicy) {
   });
 }
 
-/* // trusted types catch all for all jquery html
-const trustedHTMLpolicy = trustedTypes.createPolicy("default", {
-  createHTML: (to_escape) => to_escape,
-});
-
-$.extend({
-  htmlPrefilter: trustedHTMLpolicy.createHTML, // this is the actual function which jQuery needs
-}); */
-
 // handling multiple gmailjs instances at the same time
 window._gmailjs = window._gmailjs || new GmailFactory.Gmail($);
