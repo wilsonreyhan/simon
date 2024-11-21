@@ -16,6 +16,7 @@ window.addEventListener("message", function (event) {
   if (event.data.type == "FROM_WEBPAGE_TO_EXTENSION") {
     console.log("Injector received message:", event.data);
     chrome.runtime.sendMessage(event.data.message, (response) => {
+      console.log(response);
       window.postMessage(
         {
           type: "FROM_EXTENSION_TO_WEBPAGE",

@@ -17,6 +17,21 @@ function htmlToText(htmlContent) {
   return doc.body.textContent.trim();
 } */
 
+window.addEventListener("message", function (event) {
+  if (event.data.type == "FROM_EXTENSION_TO_WEBPAGE") {
+    const response = event.data.response;
+    if (response.success) {
+      // for printing chat responses
+      // console.log("AI Response: " + response.data.choices[0].message.content);
+
+      // for API Key testing
+      console.log(response);
+    } else {
+      console.log("Error: ", response.data);
+    }
+  }
+});
+
 function startExtension(gmail) {
   console.log("Extension loading...");
   window.gmail = gmail;
@@ -24,6 +39,15 @@ function startExtension(gmail) {
   gmail.observe.on("load", () => {
     const userEmail = gmail.get.user_email();
     console.log("Hello, " + userEmail + ". This is Simon talking!");
+    window.postMessage(
+      {
+        type: "FROM_WEBPAGE_TO_EXTENSION",
+        message: {
+          type: "OPENAI_API_KEY_CHECK",
+        },
+      },
+      "*"
+    );
 
     gmail.observe.on("view_email", (domEmail) => {
       console.log("Looking at email:", domEmail);
@@ -61,14 +85,3 @@ function startExtension(gmail) {
     });
   });
 }
-
-window.addEventListener("message", function (event) {
-  if (event.data.type == "FROM_EXTENSION_TO_WEBPAGE") {
-    const response = event.data.response;
-    if (response.success) {
-      console.log("AI Response: " + response.data.choices[0].message.content);
-    } else {
-      console.error("Error: ", response.error);
-    }
-  }
-});
