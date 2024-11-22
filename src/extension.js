@@ -27,7 +27,7 @@ window.addEventListener("message", function (event) {
       // for API Key testing
       console.log(response);
     } else {
-      console.log("Error: ", response.data);
+      console.error("Error: ", response.data);
     }
   }
 });

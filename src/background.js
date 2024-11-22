@@ -8,7 +8,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     chrome.storage.local.get(["OPENAI_API_KEY"], (result) => {
       const OPENAI_API_KEY = result.OPENAI_API_KEY;
       if (!OPENAI_API_KEY) {
-        console.log("Sending Missing Key response.");
+        console.error("Sending Missing Key response.");
         sendResponse({ success: false, data: "MISSING_KEY" });
         return true;
       }
