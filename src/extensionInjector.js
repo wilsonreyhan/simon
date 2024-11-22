@@ -1,30 +1,10 @@
 "use strict";
 
-// create a hidden element to store our image URL
-const urlContainer = document.createElement("div");
-urlContainer.id = "extension-url-container";
-urlContainer.dataset.parrotUrl = chrome.runtime.getURL(
-  "images/transparent_parrot.png"
-);
-urlContainer.style.display = "none";
-(document.body || document.head || document.documentElement).appendChild(
-  urlContainer
-);
-
-// message relay to communicate between webpage and extension/background contexts
+// message relay to communicate between webpage and background contexts
 window.addEventListener("message", function (event) {
   if (event.data.type == "FROM_WEBPAGE_TO_EXTENSION") {
     console.log("Injector received message:", event.data);
-    chrome.runtime.sendMessage(event.data.message, (response) => {
-      console.log(response);
-      window.postMessage(
-        {
-          type: "FROM_EXTENSION_TO_WEBPAGE",
-          response: response,
-        },
-        "*"
-      );
-    });
+    mediate(event.data.message);
   }
 });
 
@@ -37,5 +17,32 @@ function addScript(src) {
   );
 }
 
+// create a hidden element to store our parrot URL
+function storeParrot() {
+  const urlContainer = document.createElement("div");
+  urlContainer.id = "extension-url-container";
+  urlContainer.dataset.parrotUrl = chrome.runtime.getURL(
+    "images/transparent_parrot.png"
+  );
+  urlContainer.style.display = "none";
+  (document.body || document.head || document.documentElement).appendChild(
+    urlContainer
+  );
+}
+
+function mediate(receivedMessage) {
+  chrome.runtime.sendMessage(receivedMessage, (response) => {
+    console.log(response);
+    window.postMessage(
+      {
+        type: "FROM_EXTENSION_TO_WEBPAGE",
+        response: response,
+      },
+      "*"
+    );
+  });
+}
+
+storeParrot();
 addScript("dist/gmailJsLoader.js");
 addScript("dist/extension.js");
