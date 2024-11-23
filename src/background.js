@@ -3,10 +3,17 @@ import OpenAI from "openai";
 let openai;
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log(request);
   if (request.type == "OPENAI_API_KEY_CHECK") {
     chrome.storage.local.get(["OPENAI_API_KEY"], (result) => {
-      const success = handleAPIKey(result.OPENAI_API_KEY, sendResponse);
+      const success = handleAPIKey(
+        result.OPENAI_API_KEY,
+        sendResponse,
+        request.type
+      );
     });
+  } else if (request.type == "SET_API_KEY") {
+    handleAPIKey(request.key, sendResponse, request.type);
   } else if (request.type == "GENERATE_AI_RESPONSE") {
     handleAIResponse(request.prompt, sendResponse);
   }
@@ -15,12 +22,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 // handle OpenAI API Key.
 // Returns true if API connection is successful, otherwise false.
-function handleAPIKey(key, sendResponse) {
+async function handleAPIKey(key, sendResponse, type) {
   const OPENAI_API_KEY = key;
 
   if (!OPENAI_API_KEY) {
     console.error("Sending Missing Key response.");
-    sendResponse({ success: false, data: "MISSING_KEY" });
+    sendResponse({
+      type: type,
+      data: { success: false, report: "MISSING_KEY" },
+    });
     return false;
   }
 
@@ -29,13 +39,21 @@ function handleAPIKey(key, sendResponse) {
   });
 
   try {
-    testConnection();
+    console.log("Testing connection");
+    await testConnection();
     console.log("SUCCESSFUL_API_CONNECTION");
-    sendResponse({ success: true, data: "SUCCESSFUL_API_CONNECTION" });
+    chrome.storage.local.set({ OPENAI_API_KEY: OPENAI_API_KEY });
+    sendResponse({
+      type: type,
+      data: { success: true, report: "SUCCESSFUL_API_CONNECTION" },
+    });
     return true;
   } catch (error) {
     console.error("INVALID_CREDENTIALS");
-    sendResponse({ success: false, data: "INVALID_CREDENTIALS" });
+    sendResponse({
+      type: type,
+      data: { success: false, report: "INVALID_CREDENTIALS" },
+    });
     return false;
   }
 }

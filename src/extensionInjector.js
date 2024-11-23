@@ -32,7 +32,6 @@ function storeParrot() {
 
 function mediate(receivedMessage) {
   chrome.runtime.sendMessage(receivedMessage, (response) => {
-    console.log(response);
     window.postMessage(
       {
         type: "FROM_EXTENSION_TO_WEBPAGE",
